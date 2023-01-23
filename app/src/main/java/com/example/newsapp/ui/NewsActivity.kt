@@ -25,6 +25,7 @@ class NewsActivity : AppCompatActivity() {
         val newRepository = NewsRepository(ArticleDatabase(this))
         val viewModelProviderFactory = NewsViewModelProviderFactory(newRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NewsViewModel::class.java)
+
         val navHostFragment= supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment
         val navController= navHostFragment.navController
         bottomNavigationView.setupWithNavController(navController)
