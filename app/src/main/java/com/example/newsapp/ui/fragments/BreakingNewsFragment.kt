@@ -33,6 +33,14 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news){
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as NewsActivity).viewModel
         setupRecyclerView()
+        callBreakingNews()
+
+        srlBreakingNews.setOnRefreshListener {
+            setupRecyclerView()
+            callBreakingNews()
+            srlBreakingNews.isRefreshing = false
+
+        }
 
         newsAdapter.setOnItemClickListener {
             val builder = CustomTabsIntent.Builder()
@@ -55,7 +63,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news){
             viewModel.savedArticle(it)
             Snackbar.make(view, "Article Saved Successfully", Snackbar.LENGTH_SHORT).show()
         }
+    }
 
+    private fun callBreakingNews() {
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {   response ->
             when(response) {
                 is Resource.Success -> {
