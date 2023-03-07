@@ -1,6 +1,10 @@
 package com.example.newsapp.ui.fragments
 
+import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -14,6 +18,7 @@ import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Resource
 import kotlinx.android.synthetic.main.fragment_breaking_news.*
+import kotlinx.android.synthetic.main.item_article_preview.*
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news){
 
@@ -36,6 +41,17 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news){
                 R.id.action_breakingNewsFragment_to_articleFragment,
                 bundle
             )
+        }
+
+        newsAdapter.setOnShareButtonClickListener {
+            val url = it.url
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/*"
+            intent.putExtra(Intent.EXTRA_TEXT, url)
+
+            val chooser = Intent.createChooser(intent, "Share News")
+            startActivity(chooser)
+
         }
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {   response ->

@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -34,6 +35,17 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news){
                 R.id.action_savedNewsFragment_to_articleFragment,
                 bundle
             )
+        }
+
+        newsAdapter.setOnShareButtonClickListener {
+            val url = it.url
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/*"
+            intent.putExtra(Intent.EXTRA_TEXT, url)
+
+            val chooser = Intent.createChooser(intent, "Share News")
+            startActivity(chooser)
+
         }
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(

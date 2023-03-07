@@ -6,6 +6,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSavedNews"
+        tools:listitem="@layout/item_article_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

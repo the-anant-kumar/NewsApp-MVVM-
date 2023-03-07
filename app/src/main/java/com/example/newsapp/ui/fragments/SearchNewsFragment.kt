@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -39,6 +40,17 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news){
                 R.id.action_searchNewsFragment_to_articleFragment,
                 bundle
             )
+        }
+
+        newsAdapter.setOnShareButtonClickListener {
+            val url = it.url
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/*"
+            intent.putExtra(Intent.EXTRA_TEXT, url)
+
+            val chooser = Intent.createChooser(intent, "Share News")
+            startActivity(chooser)
+
         }
 
         var job: Job? = null
