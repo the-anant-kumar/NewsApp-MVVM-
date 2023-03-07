@@ -1,9 +1,12 @@
 package com.example.newsapp.adapters
 
+import android.graphics.Color
+import android.graphics.ColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +19,7 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     inner class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val share: Button = itemView.btnShare
+        val favourite: ImageView = itemView.btnFavorite
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Article>() {
@@ -58,6 +62,9 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         holder.share.setOnClickListener {
             onShareButtonClickListener?.let { it(article) }
         }
+        holder.favourite.setOnClickListener {
+            onFavouriteButtonClickListener?.let { it(article) }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -66,9 +73,14 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     private var onItemClickListener: ((Article) -> Unit)? = null
     private var onShareButtonClickListener: ((Article) -> Unit)? = null
+    private var onFavouriteButtonClickListener: ((Article) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (Article) -> Unit) {
         onItemClickListener = listener
+    }
+
+    fun setOnFavouriteButtonClickListener(listener: (Article) -> Unit) {
+        onFavouriteButtonClickListener = listener
     }
 
     fun setOnShareButtonClickListener(listener: (Article) -> Unit) {

@@ -10,7 +10,7 @@ interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(article: Article): Long
 
-    @Query("select * from articles")
+    @Query("select * from articles order by id desc")
     fun getAllArticles(): LiveData<List<Article>>
 
     @Delete

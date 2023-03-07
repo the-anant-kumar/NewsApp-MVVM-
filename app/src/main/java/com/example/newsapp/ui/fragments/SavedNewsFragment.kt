@@ -1,8 +1,10 @@
 package com.example.newsapp.ui.fragments
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -28,13 +30,9 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news){
         setupRecyclerView()
 
         newsAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("article", it)
-            }
-            findNavController().navigate(
-                R.id.action_savedNewsFragment_to_articleFragment,
-                bundle
-            )
+            val builder = CustomTabsIntent.Builder()
+            val customTabsIntent = builder.build()
+            customTabsIntent.launchUrl(activity as NewsActivity, Uri.parse(it.url))
         }
 
         newsAdapter.setOnShareButtonClickListener {
@@ -46,6 +44,11 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news){
             val chooser = Intent.createChooser(intent, "Share News")
             startActivity(chooser)
 
+        }
+
+        newsAdapter.setOnFavouriteButtonClickListener {
+            viewModel.savedArticle(it)
+            Snackbar.make(view, "Article Saved Successfully", Snackbar.LENGTH_SHORT).show()
         }
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
