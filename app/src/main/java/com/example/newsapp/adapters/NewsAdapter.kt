@@ -52,7 +52,7 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
                 .load(article.urlToImage)
                 .error(R.drawable.default_news_img)
                 .into(ivArticleImage)
-            tvSource.text = article.source.name
+            tvSource.text = article.source?.name
             tvTitle.text = article.title
             tvDescription.text = article.description
             setOnClickListener{
@@ -87,4 +87,3 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         onShareButtonClickListener = listener
     }
 }
-
