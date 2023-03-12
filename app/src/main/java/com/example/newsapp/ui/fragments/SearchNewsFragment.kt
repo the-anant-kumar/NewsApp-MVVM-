@@ -3,38 +3,43 @@ package com.example.newsapp.ui.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
+import com.example.newsapp.databinding.FragmentSearchNewsBinding
 import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.SEARCH_NEWS_TIME_DELAY
 import com.example.newsapp.util.Resource
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_search_news.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SearchNewsFragment : Fragment(R.layout.fragment_search_news){
+class SearchNewsFragment : Fragment(){
 
+    lateinit var binding: FragmentSearchNewsBinding
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
     val TAG = "SearchNewsFragment"
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchNewsBinding.inflate(layoutInflater, container, false)
+
         viewModel = (activity as NewsActivity).viewModel
-        etSearch.requestFocus()
+        binding.etSearch.requestFocus()
         setupRecyclerView()
 
         newsAdapter.setOnItemClickListener {
@@ -56,11 +61,11 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news){
 
         newsAdapter.setOnFavouriteButtonClickListener {
             viewModel.savedArticle(it)
-            Snackbar.make(view, "Article Saved Successfully", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), "Article Saved Successfully", Snackbar.LENGTH_SHORT).show()
         }
 
         var job: Job? = null
-        etSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.etSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     viewModel.searchNews(query)
@@ -103,18 +108,20 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news){
                 }
             }
         })
+
+        return binding.root
     }
 
     private fun hideProgressBar() {
-        paginationProgressBar.visibility = View.INVISIBLE
+        binding.paginationProgressBar.visibility = View.INVISIBLE
     }
     private fun showProgressBar() {
-        paginationProgressBar.visibility = View.VISIBLE
+        binding.paginationProgressBar.visibility = View.VISIBLE
     }
 
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
-        rvSearchNews.apply {
+        binding.rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }

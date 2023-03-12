@@ -1,25 +1,27 @@
 package com.example.newsapp.adapters
 
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import com.example.newsapp.models.Article
-import kotlinx.android.synthetic.main.item_article_preview.view.*
 
 class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     inner class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val share: Button = itemView.btnShare
-        val favourite: ImageView = itemView.btnFavorite
+        val image: ImageView = itemView.findViewById(R.id.ivArticleImage)
+        val title: TextView = itemView.findViewById(R.id.tvTitle)
+        val description: TextView = itemView.findViewById(R.id.tvDescription)
+        val source: TextView = itemView.findViewById(R.id.tvSource)
+        val share: Button = itemView.findViewById(R.id.btnShare)
+        val favourite: ImageView = itemView.findViewById(R.id.btnFavorite)
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Article>() {
@@ -47,15 +49,15 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
-        holder.itemView.apply {
-            Glide.with(this)
+        holder.apply {
+            Glide.with(itemView)
                 .load(article.urlToImage)
                 .error(R.drawable.default_news_img)
-                .into(ivArticleImage)
-            tvSource.text = article.source?.name
-            tvTitle.text = article.title
-            tvDescription.text = article.description
-            setOnClickListener{
+                .into(image)
+            source.text = article.source?.name
+            title.text = article.title
+            description.text = article.description
+            itemView.setOnClickListener{
                 onItemClickListener?.let { it(article) }
             }
         }
