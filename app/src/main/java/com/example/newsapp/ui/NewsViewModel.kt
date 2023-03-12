@@ -3,12 +3,9 @@ package com.example.newsapp.ui
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.ConnectivityManager.*
 import android.net.NetworkCapabilities.*
-import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.NewsApplication
 import com.example.newsapp.models.Article
@@ -21,7 +18,7 @@ import retrofit2.Response
 
 class NewsViewModel (
     app : Application,
-    val newsRepository : NewsRepository
+    private val newsRepository : NewsRepository
     ) : AndroidViewModel(app) {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
@@ -29,7 +26,6 @@ class NewsViewModel (
     var breakingNewsResponse: NewsResponse? = null
 
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
-    val searchNewsPage = 1
 
     init {
         getBreakingNews("in")
@@ -84,7 +80,7 @@ class NewsViewModel (
         searchNews.postValue(Resource.Loading())
         try {
             if(hasInternetConnection()){
-                val response = newsRepository.searchNews(searchQuery, searchNewsPage)
+                val response = newsRepository.searchNews(searchQuery, 1)
                 searchNews.postValue(handleSearchNewsResponse(response))
             } else {
                 searchNews.postValue(Resource.Error("No Internet Connection"))
@@ -97,7 +93,7 @@ class NewsViewModel (
         }
     }
 
-    private suspend fun safeBreakingNewsCall(countryCode: String) {
+    suspend fun safeBreakingNewsCall(countryCode: String) {
         breakingNews.postValue(Resource.Loading())
         try {
             if(hasInternetConnection()){

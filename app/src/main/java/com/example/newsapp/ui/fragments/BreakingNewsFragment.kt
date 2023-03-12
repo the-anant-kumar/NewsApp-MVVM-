@@ -20,6 +20,7 @@ import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Resource
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.*
 
 class BreakingNewsFragment : Fragment(){
 
@@ -27,6 +28,7 @@ class BreakingNewsFragment : Fragment(){
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +42,9 @@ class BreakingNewsFragment : Fragment(){
 
         binding.srlBreakingNews.setOnRefreshListener {
             setupRecyclerView()
-            callBreakingNews()
+            MainScope().launch {
+                viewModel.getBreakingNews("in")
+            }
             binding.srlBreakingNews.isRefreshing = false
 
         }
